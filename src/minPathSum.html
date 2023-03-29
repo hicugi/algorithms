@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>minPathSum</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+      :root {
+        --column-width: 64px;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      body {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      #app {
+        position: relative;
+      }
+      .list__row {
+        display: flex;
+      }
+      .list__item {
+        background-color: #dcdcdc;
+        border: 2px solid #fff;
+        width: var(--column-width);
+        height: var(--column-width);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        line-height: 1.25em;
+      }
+      .ways {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .ways__row {
+        position: absolute;
+      }
+      .ways__item {
+        z-index: 0;
+        position: absolute;
+        border: 2px solid #fff;
+        width: var(--column-width);
+        height: var(--column-width);
+        font-size: 14px;
+        line-height: 14px;
+      }
+      .ways__item-text {
+        width: 14px;
+        display: block;
+        text-align: center;
+      }
+      .ways__item-color {
+        z-index: -1;
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        display: block;
+        opacity: 0.66;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <ul class="list">
+        <li v-for="rows in grid">
+          <ul class="list__row">
+            <li class="list__item" v-for="column in rows">{{ column }}</li>
+          </ul>
+        </li>
+      </ul>
+
+      <ul class="ways" v-for="ways, wayIndex in gridWays">
+        <li v-for="rows, index in ways">
+          <ul class="ways__row" :style="{ top: `${index * 64}px` }">
+            <template v-for="column, colIndex in rows">
+              <li class="ways__item" :style="{ left: `${colIndex * 64}px`, paddingTop: `${wayIndex * 14}px` }" v-if="column">
+                <span class="ways__item-text">{{ column }}</span>
+                <span class="ways__item-color" :style="{ top: `${wayIndex * 14}px`, backgroundColor: colors[wayIndex] }"></span>
+              </li>
+            </template>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <script>
+      const { createApp } = Vue;
+
+      createApp({
+        data: () => ({
+          grid: [
+            [1, 4, 8, 6, 2, 2, 1, 7],
+            [4, 7, 3, 1, 4, 5, 5, 1],
+            [8, 8, 2, 1, 1, 8, 0, 1],
+            [8, 9, 2, 9, 8, 0, 8, 9],
+            [5, 7, 5, 7, 1, 8, 5, 5],
+            [7, 0, 9, 4, 5, 6, 5, 6],
+            [4, 9, 9, 7, 9, 1, 9, 0],
+          ],
+          gridWays: undefined,
+          colors: ["#0091AD", "#37C6D4", "#6EFAFB", "#B7F7F0", "#FFF4E4", "#FBEEC4", "#F7E8A4", "#F9C4AA", "#FBA0B0", "#FF57BB"],
+        }),
+
+        methods: {
+          minPathSum(grid) {
+            const gridWays = [];
+            const gridWayTemplate = [...Array(grid.length)].map((_) => [...Array(grid[0].length).fill("")]);
+            let gridWaysIndex = 0;
+            const addGridWay = (y, x, value) => {
+              if (gridWays[gridWaysIndex] === undefined) {
+                gridWays[gridWaysIndex] = JSON.parse(JSON.stringify(gridWayTemplate));
+              }
+              gridWays[gridWaysIndex][y][x] = value;
+            };
+            const nextGridWay = () => (gridWaysIndex += 1);
+
+            let finalResult;
+
+            const newPaths = [];
+            let location = [0, 0];
+
+            let result = grid[0][0];
+
+            const checkNextPath = () => {
+              let [y, x] = location;
+              const isNextY = grid[y + 1];
+              const isNextX = grid[y][x + 1] !== undefined;
+
+              if (!isNextY && !isNextX) {
+                if (!newPaths.length) return;
+
+                const [ny, nx, nResult] = newPaths.shift();
+                result = nResult + grid[ny][nx];
+
+                addGridWay(ny, nx, result);
+                nextGridWay();
+
+                if (result <= finalResult) {
+                  location = [ny, nx];
+                }
+                return checkNextPath();
+              }
+
+              if (isNextX) {
+                if (isNextY) {
+                  newPaths.push([y + 1, x, result]);
+                }
+
+                x += 1;
+                location[1] += 1;
+              } else if (isNextY) {
+                if (isNextX) {
+                  newPaths.push([y, x + 1, result]);
+                }
+
+                y += 1;
+                location[0] += 1;
+              }
+
+              const value = (grid[y] || [])[x];
+
+              if (value === undefined) return;
+
+              result += value;
+
+              if (finalResult && result > finalResult) {
+                location = [grid.length - 1, grid[0].length - 1];
+                return checkNextPath();
+              }
+
+              // end
+              if (grid[y + 1] === undefined && grid[y][x + 1] === undefined) {
+                finalResult = result;
+                addGridWay(y, x, result);
+                nextGridWay();
+                return checkNextPath();
+              }
+
+              addGridWay(y, x, result);
+              checkNextPath();
+            };
+
+            checkNextPath();
+
+            this.gridWays = gridWays;
+
+            return finalResult || result;
+          },
+        },
+
+        mounted() {
+          this.minPathSum(this.grid);
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
