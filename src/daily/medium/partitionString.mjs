@@ -6,7 +6,7 @@ const partitionString = (s) => {
   let res = 1;
   let prev = "";
 
-  for (let char of s) {
+  for (const char of s) {
     if (prev.includes(char)) {
       res += 1;
       prev = "";
