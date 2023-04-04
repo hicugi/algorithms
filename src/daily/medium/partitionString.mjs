@@ -17,6 +17,5 @@ const partitionString = (s) => {
 
   return res;
 };
-// abacaba
 
 module.exports = { partitionString };
