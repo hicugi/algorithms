@@ -2,9 +2,6 @@
  * @param {number[][]} grid
  * @return {number}
  */
-
-const getKey = (y, x) => `${y}.${x}`;
-
 const closedIsland = (grid) => {
   let result = 0;
   let yLength = grid.length;
