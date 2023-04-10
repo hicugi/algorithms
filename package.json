@@ -5,7 +5,7 @@
   "type": "module",
   "main": "index.mjs",
   "scripts": {
-    "test": "jest src"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
