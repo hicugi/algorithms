@@ -62,25 +62,6 @@ const lowestCommonAncestor = (root, p, q) => {
   return validate(root, []);
 };
 
-// 3, 5
-const qwe = {
-  val: 6,
-  left: {
-    val: 2,
-    left: { val: 0, left: null, right: null },
-    right: {
-      val: 4,
-      left: { val: 3, left: null, right: null },
-      right: { val: 5, left: null, right: null },
-    },
-  },
-  right: {
-    val: 8,
-    left: { val: 7, left: null, right: null },
-    right: { val: 9, left: null, right: null },
-  },
-};
-
 module.exports = {
   lowestCommonAncestor,
 };
