@@ -13,3 +13,7 @@ test("Testcase 38", () => {
   const result = stringShift("abc", JSON.parse("[[0,4]]"));
   expect(result).toBe("bca");
 });
+test("Testcase 40", () => {
+  const result = stringShift("leetcode", JSON.parse("[[1,10]]"));
+  expect(result).toBe("deleetco");
+});

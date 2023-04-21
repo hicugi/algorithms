@@ -9,7 +9,7 @@ const stringShift = (s, shift) => {
   for (let i = 0; i < shift.length; i++) {
     const [direction, amount] = shift[i];
 
-    const j = direction && -amount;
+    const j = direction && (-amount % s.length);
     const k = direction ? 0 : Infinity;
 
     const slice = chars.splice(j, amount % s.length);
