@@ -25,7 +25,7 @@ const isOneEditDistance = (s, t) => {
       continue;
     }
 
-    s = [s.substring(0, i), t[i], s.substring(i)].join("");
+    s = [s.substring(0, i), t[i], s.substring(i + 1)].join("");
   }
 
   return true;

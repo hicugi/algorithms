@@ -8,3 +8,8 @@ test("Example 2", () => {
   const result = isOneEditDistance("", "");
   expect(result).toBe(false);
 });
+
+test("Testcase 117", () => {
+  const result = isOneEditDistance("cb", "ab");
+  expect(result).toBe(true);
+});
