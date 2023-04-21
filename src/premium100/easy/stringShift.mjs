@@ -12,7 +12,7 @@ const stringShift = (s, shift) => {
     const j = direction && -amount;
     const k = direction ? 0 : Infinity;
 
-    const slice = chars.splice(j, amount);
+    const slice = chars.splice(j, amount % s.length);
     chars.splice(k, 0, ...slice);
   }
 
