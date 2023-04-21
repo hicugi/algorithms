@@ -28,7 +28,7 @@ const isOneEditDistance = (s, t) => {
     s = [s.substring(0, i), t[i], s.substring(i + 1)].join("");
   }
 
-  return true;
+  return s === t;
 };
 
 module.exports = { isOneEditDistance };

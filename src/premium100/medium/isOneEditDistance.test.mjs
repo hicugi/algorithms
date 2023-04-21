@@ -13,3 +13,7 @@ test("Testcase 117", () => {
   const result = isOneEditDistance("cb", "ab");
   expect(result).toBe(true);
 });
+test("Testcase 129", () => {
+  const result = isOneEditDistance("teacher", "teachy");
+  expect(result).toBe(false);
+});
