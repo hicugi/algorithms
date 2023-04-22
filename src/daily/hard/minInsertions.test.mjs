@@ -17,3 +17,8 @@ test("Example 3", () => {
   const result = minInsertions("leetcode");
   expect(result).toBe(5);
 });
+
+test("Testcase 20", () => {
+  const result = minInsertions("zjveiiwvc");
+  expect(result).toBe(5);
+});

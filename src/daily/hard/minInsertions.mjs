@@ -2,27 +2,26 @@
  * @param {string} s
  * @return {number}
  */
-const getMinChanges = (s) => {
-  const chars = s.split("");
-  let changes = 0;
-  for (let i = 0, j = s.length - 1; i < j; i++) {
-    if (chars[i] === chars[j]) {
-      j--;
-      continue;
+const minInsertions = (s) => {
+  const { length } = s;
+  const rs = s.split("").reverse().join("");
+
+  const memo = {};
+
+  const check = (s, rs, i, ri) => {
+    if (!i || !ri) return 0;
+
+    const key = `${i}.${ri}`;
+    if (memo[key]) return memo[key];
+
+    if (s[i - 1] === rs[ri - 1]) {
+      return (memo[key] = 1 + check(s, rs, i - 1, ri - 1));
     }
 
-    chars.splice(j + 1, 0, chars[i]);
-    changes++;
-  }
+    return (memo[key] = Math.max(check(s, rs, i - 1, ri), check(s, rs, i, ri - 1)));
+  };
 
-  return changes;
-};
-
-const minInsertions = (s) => {
-  const leftChanges = getMinChanges(s);
-  const rightChanges = getMinChanges(s.split("").reverse().join(""));
-
-  return Math.min(leftChanges, rightChanges);
+  return length - check(s, rs, length, length);
 };
 
 module.exports = { minInsertions };
