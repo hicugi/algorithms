@@ -4,24 +4,31 @@
  */
 const minInsertions = (s) => {
   const { length } = s;
-  const rs = s.split("").reverse().join("");
 
-  const memo = {};
+  let rs = "";
+  for (let i = length - 1; i >= 0; i--) {
+    rs += s[i];
+  }
 
-  const check = (s, rs, i, ri) => {
-    if (!i || !ri) return 0;
+  const dp = new Array(length + 1).fill(0).map((_) => new Array());
 
-    const key = `${i}.${ri}`;
-    if (memo[key]) return memo[key];
+  for (let i = 0; i <= length; i++) {
+    for (let j = 0; j <= length; j++) {
+      if (!i || !j) {
+        dp[i][j] = 0;
+        continue;
+      }
 
-    if (s[i - 1] === rs[ri - 1]) {
-      return (memo[key] = 1 + check(s, rs, i - 1, ri - 1));
+      if (s[i - 1] === rs[j - 1]) {
+        dp[i][j] = 1 + dp[i - 1][j - 1];
+        continue;
+      }
+
+      dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
     }
+  }
 
-    return (memo[key] = Math.max(check(s, rs, i - 1, ri), check(s, rs, i, ri - 1)));
-  };
-
-  return length - check(s, rs, length, length);
+  return length - dp[length][length];
 };
 
 module.exports = { minInsertions };
