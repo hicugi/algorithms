@@ -2,31 +2,25 @@
  * @param {string} s
  * @return {number}
  */
-const minInsertions = (s) => {
-  const leftChars = s.split("");
-
-  let leftChanges = 0;
+const getMinChanges = (s) => {
+  const chars = s.split("");
+  let changes = 0;
   for (let i = 0, j = s.length - 1; i < j; i++) {
-    if (leftChars[i] === leftChars[j]) {
+    if (chars[i] === chars[j]) {
       j--;
       continue;
     }
 
-    leftChars.splice(j + 1, 0, leftChars[i]);
-    leftChanges++;
+    chars.splice(j + 1, 0, chars[i]);
+    changes++;
   }
 
-  const rightChars = s.split("");
-  let rightChanges = 0;
-  for (let i = s.length - 1, j = 0; i > j; i--) {
-    if (rightChars[i] === rightChars[j]) {
-      j++;
-      continue;
-    }
+  return changes;
+};
 
-    rightChars.splice(j - 1, 0, rightChars[i]);
-    rightChanges++;
-  }
+const minInsertions = (s) => {
+  const leftChanges = getMinChanges(s);
+  const rightChanges = getMinChanges(s.split("").reverse().join(""));
 
   return Math.min(leftChanges, rightChanges);
 };
