@@ -5,29 +5,28 @@
  */
 const mod = 1e9 + 7;
 const numberOfArrays = (s, k) => {
-  let ns = "";
-  let nums = 0;
-  for (let i = s.length - 1; i >= 0; i--) {
-    ns = s[i] + ns;
-    if (ns[0] === "0") continue;
+  const { length } = s;
+  const dp = {};
 
-    const n = Number(ns);
-    ns = "";
+  const dfs = (index = 0) => {
+    if (dp[index] !== undefined) return dp[index];
+    if (index === length) return 1;
 
-    if (n > k) continue;
-    nums++;
-  }
+    const char = s[index];
+    if (char === "0") return 0;
 
-  if (!nums) return 0;
+    let count = 0;
+    for (let i = index; i < length; i++) {
+      const n = Number(s.substring(index, i + 1));
+      if (n > k) break;
 
-  let a = 1;
-  let b = 1;
-  for (let i = 1; i < nums; i++) {
-    b = a * 2;
-    a = b;
-  }
+      count = (count + dfs(i + 1)) % mod;
+    }
 
-  return b % mod;
+    return (dp[index] = count);
+  };
+
+  return dfs();
 };
 
 module.exports = { numberOfArrays };
