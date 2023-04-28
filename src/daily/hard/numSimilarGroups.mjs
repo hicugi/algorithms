@@ -43,8 +43,6 @@ function numSimilarGroups(strs) {
     }
   }
 
-  console.log(adj, history);
-
   return result;
 }
 
