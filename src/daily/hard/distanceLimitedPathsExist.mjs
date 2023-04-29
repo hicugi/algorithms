@@ -1,60 +1,59 @@
-/**
- * @param {number} n
- * @param {number[][]} edgeList
- * @param {number[][]} queries
- * @return {boolean[]}
- */
+class UnionFind {
+  constructor(size) {
+    this.group = [];
+    this.rank = [];
+    for (let i = 0; i < size; ++i) {
+      this.group[i] = i;
+    }
+  }
+
+  find(node) {
+    if (this.group[node] !== node) {
+      this.group[node] = this.find(this.group[node]);
+    }
+    return this.group[node];
+  }
+
+  join(node1, node2) {
+    let group1 = this.find(node1);
+    let group2 = this.find(node2);
+
+    if (group1 === group2) return;
+
+    if (this.rank[group1] > this.rank[group2]) {
+      this.group[group2] = group1;
+    } else if (this.rank[group1] < this.rank[group2]) {
+      this.group[group1] = group2;
+    } else {
+      this.group[group1] = group2;
+      this.rank[group2] += 1;
+    }
+  }
+
+  areConnected(node1, node2) {
+    return this.find(node1) === this.find(node2);
+  }
+}
+
 function distanceLimitedPathsExist(n, edgeList, queries) {
-  const group = new Array(n).fill().map((_, i) => i);
-  const rank = new Array(n).fill(0);
+  const uf = new UnionFind(n);
 
-  function find(i) {
-    if (group[i] !== i) {
-      group[i] = find(group[i]);
+  edgeList.sort((a, b) => a[2] - b[2]);
+
+  queries.forEach((query, i) => query.push(i));
+  queries.sort((a, b) => a[2] - b[2]);
+
+  const result = new Array(queries.length);
+
+  let edgesIndex = 0;
+  queries.forEach(([p, q, limit, queryOriginalIndex]) => {
+    while (edgesIndex < edgeList.length && edgeList[edgesIndex][2] < limit) {
+      uf.join(edgeList[edgesIndex][0], edgeList[edgesIndex][1]);
+      edgesIndex += 1;
     }
-    return group[i];
-  }
-  function join(i, j) {
-    const g1 = find(i);
-    const g2 = find(j);
 
-    if (g1 === g2) return;
-
-    if (rank[g1] > rank[g2]) group[g2] = g1;
-    else if (rank[g1] < rank[g2]) group[g1] = g2;
-    else {
-      group[g1] = g2;
-      rank[g2] += 1;
-    }
-  }
-  const connected = (i, j) => find(i) === find(j);
-
-  queries.forEach((elm, i) => {
-    elm.index = i;
+    result[queryOriginalIndex] = uf.areConnected(p, q);
   });
-
-  edgeList.sort(([, , a], [, , b]) => a - b);
-  queries.sort(([, , a], [, , b]) => a - b);
-
-  let edgeIndex = 0;
-  const result = [];
-
-  for (let query of queries) {
-    const [qa, qb, limit] = query;
-
-    for (let j = edgeIndex; j < edgeList.length; j++) {
-      const [a, b, dis] = edgeList[j];
-
-      if (dis < limit) {
-        join(a, b);
-        edgeIndex++;
-      }
-    }
-
-    result[query.index] = connected(qa, qb);
-  }
 
   return result;
 }
-
-module.exports = { distanceLimitedPathsExist };
