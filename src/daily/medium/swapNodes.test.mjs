@@ -1,17 +1,5 @@
+const { listNode } = require("../../listNode.mjs");
 const { swapNodes } = require("./swapNodes.mjs");
-
-function listNode(arr) {
-  const head = {};
-  let node = head;
-
-  arr.forEach((n, i) => {
-    node.val = n;
-    node.next = i === arr.length - 1 ? null : {};
-    node = node.next;
-  });
-
-  return head;
-}
 
 test("Example 1", () => {
   const result = swapNodes(listNode([1, 2, 3, 4, 5]), 2);
