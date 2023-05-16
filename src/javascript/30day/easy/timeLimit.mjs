@@ -3,6 +3,9 @@
  * @param {number} t
  * @return {Function}
  */
+
+const ERROR_MSG = "Time Limit Exceeded";
+
 function timeLimit(fn, t) {
   return async function (...args) {
     return new Promise((resolve, reject) => {
@@ -10,7 +13,7 @@ function timeLimit(fn, t) {
 
       setTimeout(() => {
         isRejected = true;
-        reject("Time Limit Exceeded");
+        reject(ERROR_MSG);
       }, t);
 
       fn(...args)
@@ -28,4 +31,4 @@ function timeLimit(fn, t) {
  * limited(150).catch(console.log) // "Time Limit Exceeded" at t=100ms
  */
 
-module.exports = { timeLimit };
+module.exports = { ERROR_MSG, timeLimit };

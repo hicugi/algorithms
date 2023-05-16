@@ -1,6 +1,4 @@
-const { timeLimit } = require("./timeLimit.mjs");
-
-const ERROR_MSG = "Time Limit Exceeded";
+const { ERROR_MSG, timeLimit } = require("./timeLimit.mjs");
 
 const sleep = (t) => new Promise((ok) => setTimeout(ok, t));
 
