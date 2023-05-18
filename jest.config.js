@@ -1,4 +1,4 @@
 export default {
   verbose: true,
-  testMatch: ["<rootDir>/src/**/*.test.mjs"],
+  testMatch: ["<rootDir>/src/**/*.test.*js"],
 };
