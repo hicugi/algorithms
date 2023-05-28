@@ -22,7 +22,6 @@ function minCost(n, cuts) {
     if (innerCuts.length === 1) {
       return calc(ne, ns);
     }
-    console.log({ innerCuts });
 
     var key = `${cutStart} ${cutEnd}`;
 
@@ -39,9 +38,7 @@ function minCost(n, cuts) {
     return (memo[key] = result);
   }
 
-  var res = dfs(0, cuts.length, 0, n);
-  console.log(memo);
-  return res;
+  return dfs(0, cuts.length, 0, n);
 }
 
 module.exports = { minCost };
